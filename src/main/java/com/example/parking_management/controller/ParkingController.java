@@ -3,11 +3,14 @@ package com.example.parking_management.controller;
 import com.example.parking_management.dto.ApiResponse;
 import com.example.parking_management.dto.TicketRequest;
 import com.example.parking_management.dto.TicketResponse;
+import com.example.parking_management.dto.TicketSummaryResponse;
 import com.example.parking_management.service.ParkingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/tickets")
@@ -28,5 +31,12 @@ public class ParkingController {
         TicketResponse response = parkingService.checkOut(vehicleId);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(true, "Checked out successfully", response));
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<ApiResponse<List<TicketSummaryResponse>>> getTodayTicketSummary() {
+        List<TicketSummaryResponse> summaryList = parkingService.getTodayTicketSummary();
+
+        return ResponseEntity.ok(new ApiResponse<>(true, "Tickets fetched successfully", summaryList));
     }
 }
